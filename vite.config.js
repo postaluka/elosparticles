@@ -4,6 +4,7 @@ import { defineConfig } from 'vite'
 // vite.config.js
 export default defineConfig({
   //plugins: [eslintPlugin({ cache: false })],
+  base: './',
   server: {
     host: 'localhost',
     cors: '*',
@@ -17,9 +18,9 @@ export default defineConfig({
     minify: true,
     manifest: true,
     rollupOptions: {
-      input: './src/main.js',
+      input: './index.html',
       output: {
-        format: 'umd',
+        format: 'es',
         entryFileNames: 'main.js',
         esModule: false,
         compact: true,
