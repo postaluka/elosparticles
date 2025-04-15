@@ -31,7 +31,7 @@ export default class Experience
         this.debug = new Debug()
         this.loaders = new Loaders()
 
-        this.textures = new Textures()
+        // this.textures = new Textures()
         this.materials = new Materials()
 
         this.sizes = new Sizes()
@@ -42,10 +42,10 @@ export default class Experience
         this.renderer = new Renderer()
         this.world = new World()
 
-        this.axesHelper = new THREE.AxesHelper(5)
+        this.axesHelper = new THREE.AxesHelper(0.1)
         this.scene.add(this.axesHelper)
 
-        this.setEnvMap()
+        // this.setEnvMap()
 
         this.sizes.on('resize', () =>
         {
@@ -56,6 +56,8 @@ export default class Experience
         {
             this.update()
         })
+
+
 
 
     }
@@ -80,6 +82,8 @@ export default class Experience
         this.world.update()
         this.renderer.update()
     }
+
+
 }
 
 

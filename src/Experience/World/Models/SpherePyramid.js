@@ -31,16 +31,25 @@ export default class SpherePyramid
 
         this.loadModel()
 
-        this.debug()
+        // this.debug()
 
     }
 
     loadModel()
     {
         this.gltfLoader.load(
-            '/models/mograph_04_bake_export.gltf',
+            '/models/draco/mograph_05_spheres_bake.gltf',
             (gltf) =>
             {
+                gltf.scene.traverse((child) =>
+                {
+                    if (child.isMesh)
+                    {
+                        child.material = this.materials.basic
+                        child.material.needsUpdate = true
+                    }
+                })
+
                 this.instance.add(gltf.scene)
 
                 this.mixer = new THREE.AnimationMixer(gltf.scene)
@@ -56,7 +65,7 @@ export default class SpherePyramid
         )
     }
 
-    update()
+    update(scroll)
     {
         // console.log('spherePyramid update');
 
@@ -69,7 +78,7 @@ export default class SpherePyramid
         {
             this.duration = this.action.getClip().duration
             // console.log(this.duration);
-            this.mixer.setTime(this.PARAMS.scroll * this.duration)
+            this.mixer.setTime(scroll * 2 * this.duration)
 
         }
 

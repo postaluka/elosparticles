@@ -10,8 +10,16 @@ export default class Materials
         this.textures = new Textures()
 
         this.basic = new THREE.MeshBasicMaterial({
-            color: 'white',
+            color: 'black',
             wireframe: false
+        })
+
+        this.plane = new THREE.MeshBasicMaterial({
+            map: this.textures.web,
+            // color: 'red',
+            transparent: true,
+            opacity: 1,
+            side: THREE.DoubleSide
         })
 
 

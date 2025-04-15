@@ -11,6 +11,13 @@ export default class Textures
 
         this.loader = this.experience.loaders.textures
 
+        this.web = this.loader.load(
+            '/png/webAlpha.png'
+        )
+        this.web.flipY = false
+
+
+
 
     }
 }

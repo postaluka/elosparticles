@@ -30,18 +30,34 @@ export default class ChaosSphere
 
         this.loadModel()
 
-        this.debug()
+        // this.debug()
 
     }
 
     loadModel()
     {
         this.gltfLoader.load(
-            '/models/chaotic_04_bake_export_main.gltf',
+            '/models/draco/chaotic_main_05_spheres_bake.gltf',
             (gltf) =>
             {
+                gltf.scene.traverse((child) =>
+                {
+                    if (child.isMesh)
+                    {
+                        child.material = this.materials.basic
+                        child.material.needsUpdate = true
+                    }
+                })
+
                 // console.log(gltf);
                 this.instance.add(gltf.scene)
+
+                gltf.scene.rotation.y = - Math.PI / 2
+
+                this.instance.rotation.x = Math.PI / 2
+
+
+
 
                 this.mixer = new THREE.AnimationMixer(gltf.scene)
                 this.action = this.mixer.clipAction(gltf.animations[0])
@@ -53,7 +69,7 @@ export default class ChaosSphere
         )
     }
 
-    update()
+    update(scroll)
     {
         // console.log('spherePyramid update');
 
@@ -66,7 +82,7 @@ export default class ChaosSphere
         {
             this.duration = this.action.getClip().duration
             // console.log(this.duration);
-            this.mixer.setTime(this.PARAMS.scroll * this.duration)
+            this.mixer.setTime(scroll * 2 * this.duration)
 
         }
 
@@ -81,7 +97,6 @@ export default class ChaosSphere
         {
             this.debug.ui.add(this.PARAMS, 'scroll').min(0).max(0.99).step(0.00001).name('step01 scroll').onChange((value) =>
             {
-
 
             })
 
