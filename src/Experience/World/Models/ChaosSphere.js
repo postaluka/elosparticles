@@ -27,6 +27,7 @@ export default class ChaosSphere
          */
         this.mixer = null
         this.action = null
+        this.finished = false
 
         this.loadModel()
 
@@ -49,21 +50,22 @@ export default class ChaosSphere
                     }
                 })
 
-                // console.log(gltf);
+
+                gltf.scene.rotation.y = - Math.PI / 2 //source file isn't correct, so needs to be rotated
+
                 this.instance.add(gltf.scene)
 
-                gltf.scene.rotation.y = - Math.PI / 2
 
                 this.instance.rotation.x = Math.PI / 2
 
 
-
-
                 this.mixer = new THREE.AnimationMixer(gltf.scene)
                 this.action = this.mixer.clipAction(gltf.animations[0])
+                // console.log(this.action);
+
                 this.action.play()
-                this.action.clampWhenFinished = true //to play once
-                // this.action.loop = THREE.LoopPingPong
+                // this.action.clampWhenFinished = true //to play once
+
 
             }
         )
@@ -71,18 +73,25 @@ export default class ChaosSphere
 
     update(scroll)
     {
-        // console.log('spherePyramid update');
-
-        // if (this.mixer)
-        // {
-        //     this.mixer.update(this.time.delta * 0.0005)
-        // }
 
         if (this.mixer && this.action)
         {
             this.duration = this.action.getClip().duration
-            // console.log(this.duration);
-            this.mixer.setTime(scroll * 2 * this.duration)
+
+
+            // Нормалізуємо скрол до прогресу анімації
+            const t = scroll * 1.9 // наприклад, анімація з 0 до 0.5 скролу
+
+            if (t >= 1)
+            {
+
+                this.mixer.setTime(this.duration - 0.001)
+                this.finished = true // фіксуємо останній кадр
+            }
+            else
+            {
+                this.mixer.setTime(t * this.duration)
+            }
 
         }
 

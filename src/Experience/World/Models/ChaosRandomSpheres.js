@@ -27,6 +27,7 @@ export default class ChaosRandomSphere
          */
         this.mixer = null
         this.action = null
+        this.finished = false
 
         this.loadModel()
 
@@ -67,18 +68,25 @@ export default class ChaosRandomSphere
 
     update(scroll)
     {
-        // console.log('spherePyramid update');
-
-        // if (this.mixer)
-        // {
-        //     this.mixer.update(this.time.delta * 0.0005)
-        // }
 
         if (this.mixer && this.action)
         {
             this.duration = this.action.getClip().duration
-            // console.log(this.duration);
-            this.mixer.setTime(scroll * 2 * this.duration)
+
+
+            // Нормалізуємо скрол до прогресу анімації
+            const t = scroll * 1.9 // наприклад, анімація з 0 до 0.5 скролу
+
+            if (t >= 1)
+            {
+
+                this.mixer.setTime(this.duration - 0.001)
+                this.finished = true // фіксуємо останній кадр
+            }
+            else
+            {
+                this.mixer.setTime(t * this.duration)
+            }
 
         }
 

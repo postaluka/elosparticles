@@ -2,9 +2,11 @@
 
 import './styles/style.css';
 import model from './script.js'
+import { log } from 'three/tsl';
 
 
 
 model()
+
 
 

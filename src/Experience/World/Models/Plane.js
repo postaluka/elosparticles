@@ -13,7 +13,6 @@ export default class Plane
 
         this.materials = this.experience.materials
 
-        console.log(this.materials.plane);
 
 
         // Parameters

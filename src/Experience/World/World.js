@@ -11,15 +11,33 @@ import ChaosRandomSphere from './Models/ChaosRandomSpheres.js';
 import Plane from './Models/Plane.js';
 
 
+
 export default class World
 {
     constructor()
     {
+
         this.PARAMS = {
             scroll: 0,
             visibleStep01: true,
             rotationSpeed: 0.001
         }
+
+        this.scrollY = null
+        this.docHeight = null
+
+        window.addEventListener('scroll', () =>
+        {
+            this.scrollTop = window.scrollY
+            this.docHeight = document.body.scrollHeight - window.innerHeight
+
+            // Нормалізований скрол від 0 до 1
+            this.scroll = this.scrollTop / this.docHeight
+
+
+            this.PARAMS.scroll = this.scroll
+        })
+
 
         this.experience = new Experience()
 
@@ -35,11 +53,10 @@ export default class World
         this.chaosSphere = new ChaosSphere()
         this.chaosRandomSphere = new ChaosRandomSphere()
         this.spherePyramid = new SpherePyramid()
+        // this.spherePyramid.instance.scale.set(0, 0, 0)
 
         this.plane = new Plane()
         this.plane.instance.position.y = -3.25
-
-
 
 
         this.rotationGroup.add(
@@ -50,38 +67,60 @@ export default class World
 
         this.rotationGroup.rotation.x = - Math.PI / 2
 
-
-        this.test = null //delete after next iteration
-
-
         // Add models
         this.scene.add(
             this.rotationGroup,
-            this.plane.instance
+            // this.plane.instance
         )
 
-        this.check()
+
         this.debug()
 
 
 
     }
 
-    check() 
-    {
-        console.log('yo');
-
-    }
 
     update()
     {
         // console.log('world update');
         this.chaosSphere.update(this.PARAMS.scroll)
         this.chaosRandomSphere.update(this.PARAMS.scroll)
-
         this.spherePyramid.update(this.PARAMS.scroll)
 
         this.rotationGroup.rotation.y += this.PARAMS.rotationSpeed
+
+        this.scrollUpdate(this.PARAMS.scroll)
+
+    }
+
+    scrollUpdate(value)
+    {
+
+        // t between 0.1 and 0.3
+        const t = THREE.MathUtils.clamp((value - 0.1) / (0.3 - 0.1), 0, 1)
+
+        const rotationX = THREE.MathUtils.lerp(-Math.PI / 2, 0, t)
+        this.rotationGroup.rotation.x = rotationX
+
+        const rotationSpeed = THREE.MathUtils.lerp(0.001, 0.0025, 0, t)
+        this.PARAMS.rotationSpeed = rotationSpeed
+
+
+        if (value < 0.50)
+        {
+            this.chaosSphere.instance.scale.set(1, 1, 1)
+            this.chaosRandomSphere.instance.scale.set(1, 1, 1)
+
+            this.spherePyramid.instance.scale.set(0, 0, 0)
+        }
+        if (value >= 0.50)
+        {
+            this.chaosSphere.instance.scale.set(0, 0, 0)
+            this.chaosRandomSphere.instance.scale.set(0, 0, 0)
+
+            this.spherePyramid.instance.scale.set(1, 1, 1)
+        }
 
     }
 
@@ -135,9 +174,3 @@ export default class World
 }
 
 
-function easeInOutCubic(t)
-{
-    return t < 0.5
-        ? 4 * t * t * t
-        : 1 - Math.pow(-2 * t + 2, 3) / 2
-}
