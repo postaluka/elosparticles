@@ -110,7 +110,7 @@ export default class ChaosRandomSphere
 
             if (t <= 0)
             {
-                this.mixer.setTime(this.duration)
+                this.mixer.setTime(0.01)
             }
 
             else if (t >= 1)

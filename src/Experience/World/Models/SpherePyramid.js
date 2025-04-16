@@ -107,7 +107,7 @@ export default class SpherePyramid
             const t = scroll * 1.85 // наприклад, анімація з 0 до 0.5 скролу
             if (t <= 0)
             {
-                this.mixer.setTime(this.duration)
+                this.mixer.setTime(0.01)
             }
 
             if (t < 1)
