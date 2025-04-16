@@ -108,7 +108,12 @@ export default class ChaosRandomSphere
             // Нормалізуємо скрол до прогресу анімації
             const t = scroll * 1.9 // наприклад, анімація з 0 до 0.5 скролу
 
-            if (t >= 1)
+            if (t <= 0)
+            {
+                this.mixer.setTime(this.duration)
+            }
+
+            else if (t >= 1)
             {
 
                 this.mixer.setTime(this.duration - 0.001)
