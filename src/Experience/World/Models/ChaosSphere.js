@@ -38,7 +38,7 @@ export default class ChaosSphere
     loadModel()
     {
         this.gltfLoader.load(
-            '/models/draco/chaotic_main_05_spheres_bake.gltf',
+            '/models/draco/chaotic_main_05_spheres_bake_v02.gltf',
             (gltf) =>
             {
                 gltf.scene.traverse((child) =>

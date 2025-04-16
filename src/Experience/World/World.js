@@ -40,13 +40,17 @@ export default class World
 
 
         this.experience = new Experience()
+        this.sizes = this.experience.sizes
 
 
         this.scene = this.experience.scene
 
         this.lights = new Lights()
 
+        this.parallaxGroup = new THREE.Group()
+
         this.rotationGroup = new THREE.Group()
+        this.parallaxGroup.add(this.rotationGroup)
 
         this.cube = new Cube()
 
@@ -69,20 +73,35 @@ export default class World
 
         // Add models
         this.scene.add(
-            this.rotationGroup,
+            this.parallaxGroup,
             // this.plane.instance
         )
 
 
         this.debug()
 
+        this.cursor = {}
+        this.cursor.x = 0
+        this.cursor.y = 0
+        window.addEventListener('mousemove', (event) =>
+        {
+            this.cursor.x = event.clientX / this.sizes.width - 0.5
+            this.cursor.y = event.clientY / this.sizes.height - 0.5
 
+        })
 
     }
 
 
     update()
     {
+        // PARALLAX
+        this.parallaxGroup.rotation.y = this.cursor.x * 0.1
+        this.parallaxGroup.rotation.x = this.cursor.y * 0.1
+
+        this.parallaxGroup.position.x = this.cursor.x * 0.1
+        this.parallaxGroup.position.y = -this.cursor.y * 0.1
+
         // console.log('world update');
         this.chaosSphere.update(this.PARAMS.scroll)
         this.chaosRandomSphere.update(this.PARAMS.scroll)

@@ -8,6 +8,8 @@ export default class Camera
 {
     constructor()
     {
+
+
         this.experience = new Experience()
         this.sizes = this.experience.sizes
         this.scene = this.experience.scene
@@ -17,6 +19,7 @@ export default class Camera
         // this.setControl()
 
         // this.setDebug()
+
 
     }
 
@@ -83,10 +86,6 @@ export default class Camera
 
     update()
     {
-        // this.controls.update()
-        // console.log(
-        //     this.instance.position,
-        //     this.instance.rotation
-        // );
+
     }
 }

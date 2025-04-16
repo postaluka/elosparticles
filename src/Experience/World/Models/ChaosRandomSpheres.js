@@ -31,6 +31,7 @@ export default class ChaosRandomSphere
 
         this.loadModel()
 
+
         // this.debug()
 
     }
@@ -65,6 +66,8 @@ export default class ChaosRandomSphere
             }
         )
     }
+
+
 
     update(scroll)
     {
