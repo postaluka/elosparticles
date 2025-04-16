@@ -105,6 +105,10 @@ export default class SpherePyramid
 
             // Нормалізуємо скрол до прогресу анімації
             const t = scroll * 1.85 // наприклад, анімація з 0 до 0.5 скролу
+            if (t <= 0)
+            {
+                this.mixer.setTime(this.duration)
+            }
 
             if (t < 1)
             {
