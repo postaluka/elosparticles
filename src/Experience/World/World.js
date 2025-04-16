@@ -122,7 +122,7 @@ export default class World
         const rotationX = THREE.MathUtils.lerp(-Math.PI / 2, 0, t)
         this.rotationGroup.rotation.x = rotationX
 
-        const rotationSpeed = THREE.MathUtils.lerp(0.001, 0.0025, 0, t)
+        const rotationSpeed = THREE.MathUtils.lerp(0.0005, 0.002, t)
         this.PARAMS.rotationSpeed = rotationSpeed
 
 

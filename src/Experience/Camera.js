@@ -29,7 +29,7 @@ export default class Camera
         this.instance.position.set(
             0,
             -0.1,
-            4.2
+            6.5
         )
         this.instance.rotation.set(
             0,

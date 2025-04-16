@@ -82,9 +82,9 @@ export default class SpherePyramid
                 this.mixer.setTime(this.duration)
                 this.finished = true // фіксуємо останній кадр
             }
-            else if (t >= 2)
+            else if (t >= 1.85)
             {
-                this.mixer.setTime(this.duration - 0.001)
+                this.mixer.setTime(this.duration - 0.1)
                 this.finished = true // фіксуємо останній кадр
             }
             else
