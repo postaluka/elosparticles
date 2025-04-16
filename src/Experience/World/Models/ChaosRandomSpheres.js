@@ -38,6 +38,7 @@ export default class ChaosRandomSphere
 
     loadModel()
     {
+
         this.gltfLoader.load(
             '/models/draco/chaotic_random_05_spheres_bake.gltf',
             (gltf) =>
@@ -50,6 +51,18 @@ export default class ChaosRandomSphere
                         child.material.needsUpdate = true
                     }
                 })
+
+                for (const child of gltf.scene.children[0].children)
+                {
+                    if (child.isMesh)
+                    {
+                        child.scale.set(10, 10, 10)
+                        // console.log(child.scale);
+
+
+                    }
+                }
+
 
                 // console.log(gltf);
                 this.instance.add(gltf.scene)
@@ -67,7 +80,22 @@ export default class ChaosRandomSphere
         )
     }
 
+    updateScaleFix(scroll)
+    {
+        // Нормалізуємо scroll до t в діапазоні 0 → 1, але тільки в межах 0 → 0.5
+        const t = THREE.MathUtils.clamp(scroll / 0.5, 0, 1)
 
+        // Лінійна інтерполяція від 0.5 до 0
+        const scaleFactor = THREE.MathUtils.lerp(0.5, 0, t)
+
+        this.instance.traverse((child) =>
+        {
+            if (child.isMesh)
+            {
+                child.scale.setScalar(scaleFactor)
+            }
+        })
+    }
 
     update(scroll)
     {
@@ -85,10 +113,12 @@ export default class ChaosRandomSphere
 
                 this.mixer.setTime(this.duration - 0.001)
                 this.finished = true // фіксуємо останній кадр
+                this.updateScaleFix(scroll)
             }
             else
             {
                 this.mixer.setTime(t * this.duration)
+                this.updateScaleFix(scroll)
             }
 
         }

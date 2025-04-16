@@ -71,6 +71,40 @@ export default class ChaosSphere
         )
     }
 
+    updateDepthSize(scroll)
+    {
+        // temp world position of a particle
+        const tempVec = new THREE.Vector3()
+
+        // Нормалізуємо scroll до діапазону 0 → 1
+        const t = THREE.MathUtils.clamp(scroll, 0, 1)
+
+
+        // maxScale плавно змінюється від 0.5 до 1.15
+        const minScale = THREE.MathUtils.lerp(0.5, 1.25, t)
+        const maxScale = THREE.MathUtils.lerp(0.0, 2.5, t)
+
+        if (this.instance)
+        {
+            this.instance.traverse((child) =>
+            {
+                if (child.isMesh)
+                {
+                    child.getWorldPosition(tempVec)
+
+                    const distanceZ = tempVec.z
+
+                    // 1 + distanceZ * 0.2 – скейл фактор, 0.2 – мінімум (шоб не 0), 5 – максімум, щоб не огромні
+                    const scaleFactor = THREE.MathUtils.clamp(1 + distanceZ * 0.9, minScale, maxScale)
+
+                    child.scale.setScalar(scaleFactor)
+
+                }
+
+            })
+        }
+    }
+
     update(scroll)
     {
 
@@ -94,6 +128,8 @@ export default class ChaosSphere
             }
 
         }
+
+        this.updateDepthSize(scroll)
 
     }
 

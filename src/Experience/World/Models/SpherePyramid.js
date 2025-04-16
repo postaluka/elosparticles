@@ -48,6 +48,10 @@ export default class SpherePyramid
                     {
                         child.material = this.materials.basic
                         child.material.needsUpdate = true
+
+                        // console.log(child.scale);
+                        // child.scale.set(2, 2, 2)
+
                     }
                 })
 
@@ -64,6 +68,31 @@ export default class SpherePyramid
 
             }
         )
+    }
+
+    updateDepthSize()
+    {
+        const tempVec = new THREE.Vector3()
+
+        if (this.instance)
+        {
+            this.instance.traverse((child) =>
+            {
+                if (child.isMesh)
+                {
+                    child.getWorldPosition(tempVec)
+
+                    const distanceZ = tempVec.z
+
+                    // 1 + distanceZ * 0.2 – скейл фактор, 0.2 – мінімум (шоб не 0), 5 – максімум, щоб не огромні
+                    const scaleFactor = THREE.MathUtils.clamp(1 + distanceZ * 0.9, 0.7, 1.4)
+
+                    child.scale.setScalar(scaleFactor)
+
+                }
+
+            })
+        }
     }
 
     update(scroll)
@@ -91,8 +120,9 @@ export default class SpherePyramid
             {
                 this.mixer.setTime(t * this.duration)
             }
-
         }
+
+        this.updateDepthSize()
 
     }
 
