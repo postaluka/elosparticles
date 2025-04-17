@@ -6,10 +6,10 @@ export default defineConfig({
   //plugins: [eslintPlugin({ cache: false })],
   base: './',
   server: {
-    host: 'localhost',
-    cors: '*',
+    host: '0.0.0.0', // 👈 це дозволяє доступ з інших пристроїв у локальній мережі
+    cors: true,
     hmr: {
-      host: 'localhost',
+      host: '192.168.50.208', // можна залишити
       protocol: 'ws',
     },
   },

@@ -107,6 +107,7 @@ export default class ChaosSphere
 
     update(scroll)
     {
+        scroll = Math.max(0, scroll)
 
         if (this.mixer && this.action)
         {
@@ -115,12 +116,13 @@ export default class ChaosSphere
 
             // Нормалізуємо скрол до прогресу анімації
             const t = scroll * 1.9 // наприклад, анімація з 0 до 0.5 скролу
-            if (t <= 0)
+
+            if (t < 1.9)
             {
-                this.mixer.setTime(0.01)
+                this.mixer.setTime(this.duration)
             }
 
-            if (t >= 1)
+            if (t >= 1.9)
             {
 
                 this.mixer.setTime(this.duration - 0.001)
