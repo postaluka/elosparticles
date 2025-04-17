@@ -7,10 +7,7 @@ export default class SpherePyramid
 {
     constructor()
     {
-        this.PARAMS = {
-            scroll: 0,
-            visible: false
-        }
+
 
         this.experience = new Experience()
         this.time = this.experience.time
@@ -28,7 +25,7 @@ export default class SpherePyramid
          */
         this.mixer = null
         this.action = null
-        this.finished = false
+        this.duration = null
 
         this.loadModel()
 
@@ -57,11 +54,11 @@ export default class SpherePyramid
 
                 this.instance.add(gltf.scene)
 
+
                 this.mixer = new THREE.AnimationMixer(gltf.scene)
                 this.action = this.mixer.clipAction(gltf.animations[0])
-                this.action.play()
-                // this.action.clampWhenFinished = true //to play once
-                // this.action.loop = THREE.LoopPingPong
+
+                this.duration = this.action.getClip().duration
 
 
 
@@ -95,59 +92,45 @@ export default class SpherePyramid
         }
     }
 
+    play()
+    {
+        this.action.reset()
+        this.action.paused = false
+        this.action.timeScale = 1 // прямий напрям
+        this.action.setLoop(THREE.LoopOnce)
+        this.action.clampWhenFinished = true
+        this.action.time = 0
+
+        this.action.play()
+    }
+
+    reverse()
+    {
+        this.action.reset()
+        this.action.paused = false
+        this.action.setLoop(THREE.LoopOnce)
+        this.action.clampWhenFinished = true
+        this.action.timeScale = -1 // реверс
+
+        // встановити анімацію на останній кадр перед відворотом
+        this.action.time = this.action.getClip().duration
+
+        this.action.play()
+    }
+
     update(scroll)
     {
 
         if (this.mixer && this.action)
         {
-            this.duration = this.action.getClip().duration
+            // this.scrollUpdate(scroll)
 
+            this.mixer.update(this.time.delta * 0.0015)
 
-            // Нормалізуємо скрол до прогресу анімації
-            const t = scroll * 1.85 // наприклад, анімація з 0 до 0.5 скролу
-            if (t <= 0)
-            {
-                this.mixer.setTime(0.01)
-            }
-
-            if (t < 1)
-            {
-                this.mixer.setTime(this.duration)
-                this.finished = true // фіксуємо останній кадр
-            }
-            else if (t >= 1.85)
-            {
-                this.mixer.setTime(this.duration - 0.1)
-                this.finished = true // фіксуємо останній кадр
-            }
-            else
-            {
-                this.mixer.setTime(t * this.duration)
-            }
         }
 
-        this.updateDepthSize()
+        this.updateDepthSize(scroll)
 
     }
 
-    debug()
-    {
-
-        // Debug
-        this.debug = this.experience.debug
-        if (this.debug.active)
-        {
-            this.debug.ui.add(this.PARAMS, 'scroll').min(0).max(0.99).step(0.00001).name('step02 scroll').onChange((value) =>
-            {
-                // console.log(value);
-
-            })
-
-            this.debug.ui.add(this.PARAMS, 'visible').name('show step02').onChange((value) =>
-            {
-                if (value) this.instance.scale.set(1, 1, 1)
-                if (!value) this.instance.scale.set(0, 0, 0)
-            })
-        }
-    }
 }

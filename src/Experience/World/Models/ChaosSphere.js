@@ -8,8 +8,8 @@ export default class ChaosSphere
     constructor()
     {
         this.PARAMS = {
-            scroll: 0,
-            visible: true
+            minScale: 0.5,
+            maxScale: 0.0
         }
 
         this.experience = new Experience()
@@ -22,16 +22,18 @@ export default class ChaosSphere
 
         this.instance = new THREE.Group()
 
+
         /**
          * Animation
          */
         this.mixer = null
         this.action = null
-        this.finished = false
+        this.duration = null
+
 
         this.loadModel()
 
-        // this.debug()
+
 
     }
 
@@ -61,28 +63,20 @@ export default class ChaosSphere
 
                 this.mixer = new THREE.AnimationMixer(gltf.scene)
                 this.action = this.mixer.clipAction(gltf.animations[0])
-                // console.log(this.action);
 
-                this.action.play()
-                // this.action.clampWhenFinished = true //to play once
+                this.duration = this.action.getClip().duration
 
 
             }
         )
     }
 
+
+
     updateDepthSize(scroll)
     {
         // temp world position of a particle
         const tempVec = new THREE.Vector3()
-
-        // Нормалізуємо scroll до діапазону 0 → 1
-        const t = THREE.MathUtils.clamp(scroll, 0, 1)
-
-
-        // maxScale плавно змінюється від 0.5 до 1.15
-        const minScale = THREE.MathUtils.lerp(0.5, 1.25, t)
-        const maxScale = THREE.MathUtils.lerp(0.0, 2.5, t)
 
         if (this.instance)
         {
@@ -95,7 +89,7 @@ export default class ChaosSphere
                     const distanceZ = tempVec.z
 
                     // 1 + distanceZ * 0.2 – скейл фактор, 0.2 – мінімум (шоб не 0), 5 – максімум, щоб не огромні
-                    const scaleFactor = THREE.MathUtils.clamp(1 + distanceZ * 0.9, minScale, maxScale)
+                    const scaleFactor = THREE.MathUtils.clamp(1 + distanceZ * 0.9, 0.7, 1.25)
 
                     child.scale.setScalar(scaleFactor)
 
@@ -105,33 +99,42 @@ export default class ChaosSphere
         }
     }
 
+    play()
+    {
+        this.action.reset()
+        this.action.paused = false
+        this.action.timeScale = 1 // прямий напрям
+        this.action.setLoop(THREE.LoopOnce)
+        this.action.clampWhenFinished = true
+        this.action.time = 0
+
+        this.action.play()
+    }
+
+    reverse()
+    {
+        this.action.reset()
+        this.action.paused = false
+        this.action.setLoop(THREE.LoopOnce)
+        this.action.clampWhenFinished = true
+        this.action.timeScale = -1 // реверс
+
+        // встановити анімацію на останній кадр перед відворотом
+        this.action.time = this.action.getClip().duration
+
+        this.action.play()
+    }
+
+
     update(scroll)
     {
-        scroll = Math.max(0, scroll)
+
 
         if (this.mixer && this.action)
         {
-            this.duration = this.action.getClip().duration
+            // this.scrollUpdate(scroll)
 
-
-            // Нормалізуємо скрол до прогресу анімації
-            const t = scroll * 1.9 // наприклад, анімація з 0 до 0.5 скролу
-
-            if (t < 1.9)
-            {
-                this.mixer.setTime(this.duration)
-            }
-
-            if (t >= 1.9)
-            {
-
-                this.mixer.setTime(this.duration - 0.001)
-                this.finished = true // фіксуємо останній кадр
-            }
-            else
-            {
-                this.mixer.setTime(t * this.duration)
-            }
+            this.mixer.update(this.time.delta * 0.0015)
 
         }
 
@@ -139,23 +142,8 @@ export default class ChaosSphere
 
     }
 
-    debug()
-    {
-
-        // Debug
-        this.debug = this.experience.debug
-        if (this.debug.active)
-        {
-            this.debug.ui.add(this.PARAMS, 'scroll').min(0).max(0.99).step(0.00001).name('step01 scroll').onChange((value) =>
-            {
-
-            })
-
-            this.debug.ui.add(this.PARAMS, 'visible').name('show step01').onChange((value) =>
-            {
-                if (value) this.instance.scale.set(1, 1, 1)
-                if (!value) this.instance.scale.set(0, 0, 0)
-            })
-        }
-    }
 }
+
+
+
+

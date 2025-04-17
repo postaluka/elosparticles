@@ -1,4 +1,7 @@
 import * as THREE from 'three'
+import { EffectComposer } from 'three/examples/jsm/postprocessing/EffectComposer.js'
+import { RenderPass } from 'three/examples/jsm/postprocessing/RenderPass.js'
+
 
 import Experience from "./Experience";
 
@@ -13,6 +16,9 @@ export default class Renderer
         this.camera = this.experience.camera
 
         this.setInstance()
+
+        this.setComposer()
+
     }
 
     setInstance()
@@ -29,6 +35,15 @@ export default class Renderer
 
     }
 
+    setComposer()
+    {
+        this.composer = new EffectComposer(this.instance)
+        this.composer.addPass(new RenderPass(this.scene, this.camera.instance))
+
+
+
+    }
+
     resize()
     {
         this.instance.setSize(this.sizes.width, this.sizes.height)
@@ -37,6 +52,8 @@ export default class Renderer
 
     update()
     {
-        this.instance.render(this.scene, this.camera.instance)
+        // this.instance.render(this.scene, this.camera.instance)
+        this.composer.render()
+
     }
 }

@@ -2,9 +2,15 @@
 
 import './styles/style.css';
 import model from './script.js'
-import { log } from 'three/tsl';
 
-
+// delete before Bulhakov
+window.addEventListener('load', () =>
+{
+    setTimeout(() =>
+    {
+        window.scrollTo(0, 0)
+    }, 100) // або більше, якщо потрібно
+})
 
 model()
 

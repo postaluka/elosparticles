@@ -6,6 +6,7 @@
 html,
 body {
   background-color: #FAFAFA;
+
   /* no scroll when control is unactive */
   /* overflow: hidden; */
   overflow-y: scroll;

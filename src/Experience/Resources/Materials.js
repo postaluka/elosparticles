@@ -14,6 +14,7 @@ export default class Materials
             wireframe: false
         })
 
+
         this.plane = new THREE.MeshBasicMaterial({
             map: this.textures.web,
             // color: 'red',
